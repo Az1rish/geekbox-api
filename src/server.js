@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-const { PORT } = require('./config')
+const { PORT, DATABASE_URL } = require('./config')
 
 app.get('/api/*', (req, res) => {
   res.json({ok: true});
