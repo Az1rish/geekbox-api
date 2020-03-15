@@ -7,7 +7,7 @@ describe('Auth Endpoints', () => {
     let db;
 
     const { testUsers } = helpers.makeResourceFixtures();
-    const testUsers = testUsers[0];
+    const testUser = testUsers[0];
 
     before('make knex instance', () => {
         db = knex({
