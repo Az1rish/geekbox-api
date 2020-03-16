@@ -2,12 +2,14 @@ const knex = require('knex');
 const app = require('../src/app');
 const helpers = require('./test-helpers');
 
-describe('Categories Endpoints', () => {
+describe.only('Categories Endpoints', () => {
     let db;
 
     const {
         testUsers,
-        testCategories
+        testCategories,
+        testResources,
+        testComments
     } = helpers.makeResourceFixtures();
 
     before('make knex instance', () => {
@@ -36,12 +38,16 @@ describe('Categories Endpoints', () => {
                 db,
                 testUsers,
                 testCategories,
+                testResources,
+                testComments
             ));
 
             it('responds with 200 and all of the categories', () => {
                 const expectedCategories = testCategories.map((category) => helpers.makeExpectedResource(
                     testUsers,
                     category,
+                    testResources,
+                    testComments
                 ));
                 return supertest(app)
                     .get('/api/categories')
@@ -89,7 +95,9 @@ describe('Categories Endpoints', () => {
             beforeEach('insert categories', () => helpers.seedResourceTables(
                 db,
                 testUsers,
-                testCategories
+                testCategories,
+                testResources,
+                testComments
             ));
 
             it('responds with 200 and the specified category', () => {
@@ -97,6 +105,8 @@ describe('Categories Endpoints', () => {
                 const expectedCategory = helpers.makeExpectedCategory(
                     testUsers,
                     testCategories[categoryId - 1],
+                    testResources,
+                    testComments
                 );
 
                 return supertest(app)
@@ -130,7 +140,7 @@ describe('Categories Endpoints', () => {
     });
 
     describe('POST /categories', () => {
-        it('creates category, responding with 201 and the new category', () => {
+        it('creates category, responding with 201 and the new category', function() {
             this.retries(3);
             const testUser = helpers.makeUsersArray()[0];
             const newCategory = {
@@ -162,9 +172,7 @@ describe('Categories Endpoints', () => {
                 return supertest(app)
                     .delete(`/categories/${categoryId}`)
                     .expect(404, {
-                        error: {
-                            message: 'Photo doesn\'t exist'
-                        }
+                        error: 'Photo doesn\'t exist'
                     });
             });
         });

@@ -308,7 +308,7 @@ function seedResourceTables(db, users, categories, resources, comments = []) {
     return db.transaction(async (trx) => {
         await seedUsers(trx, users);
         await trx.into('geekbox_categories').insert(categories);
-        await trx.raw('SELECT setval(\'geekbox_categories_id_seq\', ?)', [categories[categories.length].id],
+        await trx.raw('SELECT setval(\'geekbox_categories_id_seq\', ?)', [categories[categories.length - 1].id],
         );
         await trx.into('geekbox_resources').insert(resources);
         await trx.raw('SELECT setval(\'geekbox_resources_id_seq\', ?)', [resources[resources.length - 1].id],

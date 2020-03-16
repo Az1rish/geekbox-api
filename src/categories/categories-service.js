@@ -93,3 +93,5 @@ const userFields = [
     'usr.date_created AS user:date_created',
     'usr.date_modified AS user:date_modified'
 ];
+
+module.exports = CategoriesService;
