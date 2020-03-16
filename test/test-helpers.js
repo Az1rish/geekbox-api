@@ -177,6 +177,17 @@ function calculateAverageCommentRating(comments) {
     return Math.round(sum / comments.length);
 }
 
+function makeExpectedCategory(users, category) {
+    const user = users.find((user) => user.id === category.user_id);
+
+    return {
+        id: category.id,
+        title: category.title,
+        date_created: category.date_created,
+        user_id: user.id
+    };
+}
+
 function makeExpectedResource(users, resource, comments = []) {
     const user = users.find((user) => user.id === resource.user_id);
 
@@ -244,6 +255,23 @@ function makeMaliciousResource(user) {
     };
 }
 
+function makeMaliciousCategory(user) {
+    const maliciousCategory = {
+        id: 911,
+        title: 'Naughty naughty very naughty <script>alert("xss");</script>Bad image <img src="https://url.to.file.which/does-not.exist" onerror="alert(document.cookie);">. But not <strong>all</strong> bad.',
+        date_created: new Date().toISOString(),
+        user_id: user.id
+    };
+    const expectedCategory = {
+        ...makeExpectedCategory([user], maliciousCategory),
+        title: 'Naughty naughty very naughty &lt;script&gt;alert(\"xss\");&lt;/script&gt;Bad image <img src="https://url.to.file.which/does-not.exist">. But not <strong>all</strong> bad.'
+    };
+    return {
+        maliciousCategory,
+        expectedCategory
+    };
+}
+
 function makeResourceFixtures() {
     const testUsers = makeUsersArray();
     const testCategories = makeCategoriesArray(testUsers);
@@ -300,6 +328,13 @@ function seedMaliciousResource(db, user, resource) {
             .insert([resource]));
 }
 
+function seedMaliciousCategory(db, user, category) {
+    return seedUsers(db, [user])
+        .then(() => db
+            .into('geekbox_categories')
+            .insert([category]));
+}
+
 function makeAuthHeader(user, secret = process.env.JWT_SECRET) {
     const token = jwt.sign({ user_id: user.id },
         secret, {
@@ -314,10 +349,13 @@ module.exports = {
     makeCategoriesArray,
     makeResourcesArray,
     makeCommentsArray,
+    makeExpectedCategory,
     makeExpectedResource,
     makeExpectedResourceComments,
     makeResourceFixtures,
 
+    seedMaliciousCategory,
+    makeMaliciousCategory,
     makeMaliciousResource,
     makeAuthHeader,
     cleanTables,
