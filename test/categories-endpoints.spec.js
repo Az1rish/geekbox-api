@@ -171,7 +171,7 @@ describe('Categories Endpoints', () => {
 
         context('Given there are categories in the database', () => {
             const testUsers = helpers.makeUsersArray();
-            const testCategories = helpers.makeCategoriesArray();
+            const testCategories = helpers.makeCategoriesArray(testUsers);
 
             beforeEach('insert categories', () => db
                 .into('geekbox_categories')
@@ -214,7 +214,7 @@ describe('Categories Endpoints', () => {
         });
 
         context('Given there are categories in the database', () => {
-            const testCategories = makeCategoriesArray();
+            const testCategories = helpers.makeCategoriesArray(testUsers);
 
             beforeEach('insert categories', () => db
                 .into('geekbox_users')
