@@ -96,7 +96,7 @@ describe('Users Endpoints', () => {
                     .post('/api/users')
                     .send(userPasswordStartsSpaces)
                     .expect(400, {
-                        error: 'Passwords must not start or end with empty spaces'
+                        error: 'Password must not start or end with empty spaces'
                     });
             });
 
