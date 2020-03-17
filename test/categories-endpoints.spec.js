@@ -26,7 +26,7 @@ describe('Categories Endpoints', () => {
 
     afterEach('cleanup', () => helpers.cleanTables(db));
 
-    describe.only('GET /api/categories', () => {
+    describe('GET /api/categories', () => {
         context('Given no categories', () => {
             it('responds with 200 and an empty list', () => supertest(app)
                 .get('/api/categories')
@@ -137,7 +137,7 @@ describe('Categories Endpoints', () => {
         });
     });
 
-    describe('POST /categories', () => {
+    describe.only('POST /categories', () => {
         it('creates category, responding with 201 and the new category', function() {
             this.retries(3);
             const testUser = helpers.makeUsersArray()[0];

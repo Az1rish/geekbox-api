@@ -184,7 +184,13 @@ function makeExpectedCategory(users, category) {
         id: category.id,
         title: category.title,
         date_created: category.date_created,
-        user_id: user.id
+        user: {
+            id: user.id,
+            user_name: user.user_name,
+            first_name: user.first_name,
+            last_name: user.last_name,
+            date_created: user.date_created
+        }
     };
 }
 
@@ -335,12 +341,13 @@ function seedMaliciousCategory(db, user, category) {
             .insert([category]));
 }
 
-function makeAuthHeader(user, secret = process.env.JWT_SECRET) {
+function makeAuthHeader(user, secret = process.env.JWT_SECRET) {  
     const token = jwt.sign({ user_id: user.id },
         secret, {
             subject: user.user_name,
             algorithm: 'HS256'
         });
+
     return `Bearer ${token}`;
 }
 

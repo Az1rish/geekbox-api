@@ -1,4 +1,5 @@
 const xss = require('xss');
+const Treeize = require('treeize');
 const config = require('../config');
 
 const CategoriesService = {
@@ -76,11 +77,15 @@ const CategoriesService = {
         return categories.map(this.serializeCategory);
     },
     serializeCategory(category) {
+        const categoryTree = new Treeize();
+
+        const categoryData = categoryTree.grow([category]).getData()[0];
+
         return {
-            id: category.id,
-            title: xss(category.title),
-            date_created: category.date_created,
-            user_id: category.user_id
+            id: categoryData.id,
+            title: xss(categoryData.title),
+            date_created: categoryData.date_created,
+            user: categoryData.user || {}
         };
     }
 };
@@ -94,4 +99,4 @@ const userFields = [
     'usr.date_modified AS user:date_modified'
 ];
 
-module.exports = CategoriesService;
+module.exports = {CategoriesService};

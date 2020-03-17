@@ -1,6 +1,6 @@
 const express = require('express');
 const path = require('path');
-const CategoriesService = require('./categories-service');
+const {CategoriesService} = require('./categories-service');
 const { requireAuth } = require('../middleware/jwt-auth');
 
 const categoriesRouter = express.Router();
