@@ -141,9 +141,13 @@ describe.only('Categories Endpoints', () => {
 
     describe.only('POST /categories', () => {
         beforeEach('insert users', () => db
-                .into('geekbox_users')
-                .insert(testUsers));
-                
+            .into('geekbox_users')
+            .insert(testUsers));
+
+        // beforeEach('insert categories', () => db
+            // .into('geekbox_categories')
+            // .insert(testCategories));
+
         it('creates category, responding with 201 and the new category', function() {
             
             this.retries(3);
@@ -158,16 +162,16 @@ describe.only('Categories Endpoints', () => {
                 .send(newCategory)
                 .expect(201)
                 .expect((res) => {
-                    expect(res.body.title).to.eql(newCategory.title);
-                    expect(res.body).to.have.property('id');
-                    expect(res.headers.location).to.eql(`/categories/${res.body.id}`);
+                    expect(res.body.category.title).to.eql(newCategory.title);
+                    expect(res.body.category).to.have.property('id');
+                    expect(res.headers.location).to.eql(`/api/categories/${res.body.category.id}`);
                     const expectedDate = new Date().toLocaleString('en', { timeZone: 'UTC' });
-                    const actualDate = new Date(res.body.date_created).toLocaleString();
+                    const actualDate = new Date(res.body.category.date_created).toLocaleString();
                     expect(actualDate).to.eql(expectedDate);
                 })
                 .then((postRes) => supertest(app)
-                    .get(`/api/categories/${postRes.body.id}`)
-                    .expect(postRes.body));
+                    .get(`/api/categories/${postRes.body.category.id}`)
+                    .expect(postRes.body.category));
         });
     });
 
