@@ -166,9 +166,11 @@ describe.only('Categories Endpoints', () => {
                     expect(actualDate).to.eql(expectedDate);
                 })
                 .then((postRes) => {
-                    supertest(app)
+                    const newCat = postRes.body.category;
+                    // console.log(`Category: ${Object.keys(newCat)}`)
+                    return supertest(app)
                         .get(`/api/categories/${postRes.body.category.id}`)
-                        .expect(postRes.body.category)
+                        .expect(helpers.makeExpectedCategory(testUsers, newCat))
                 });
         });
     });
