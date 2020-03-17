@@ -139,13 +139,19 @@ describe.only('Categories Endpoints', () => {
         });
     });
 
-    describe('POST /categories', () => {
+    describe.only('POST /categories', () => {
+        beforeEach('insert users', () => db
+                .into('geekbox_users')
+                .insert(testUsers));
+                
         it('creates category, responding with 201 and the new category', function() {
+            
             this.retries(3);
-            const testUser = helpers.makeUsersArray()[0];
+            const testUser = testUsers[0];
             const newCategory = {
                 title: 'Test Category'
             };
+
             return supertest(app)
                 .post('/api/categories')
                 .set('Authorization', helpers.makeAuthHeader(testUser))
