@@ -144,10 +144,6 @@ describe.only('Categories Endpoints', () => {
             .into('geekbox_users')
             .insert(testUsers));
 
-        // beforeEach('insert categories', () => db
-            // .into('geekbox_categories')
-            // .insert(testCategories));
-
         it('creates category, responding with 201 and the new category', function() {
             
             this.retries(3);
@@ -169,9 +165,11 @@ describe.only('Categories Endpoints', () => {
                     const actualDate = new Date(res.body.category.date_created).toLocaleString();
                     expect(actualDate).to.eql(expectedDate);
                 })
-                .then((postRes) => supertest(app)
-                    .get(`/api/categories/${postRes.body.category.id}`)
-                    .expect(postRes.body.category));
+                .then((postRes) => {
+                    supertest(app)
+                        .get(`/api/categories/${postRes.body.category.id}`)
+                        .expect(postRes.body.category)
+                });
         });
     });
 
