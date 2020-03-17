@@ -101,7 +101,9 @@ async function checkCategoryExists(req, res, next) {
 
         if (!category) {
             return res.status(404).json({
-                error: 'Category doesn\'t exist'
+                error: {
+                    message: 'Category doesn\'t exist'
+                }
             });
         }
 

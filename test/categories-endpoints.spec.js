@@ -2,7 +2,7 @@ const knex = require('knex');
 const app = require('../src/app');
 const helpers = require('./test-helpers');
 
-describe('Categories Endpoints', () => {
+describe.only('Categories Endpoints', () => {
     let db;
 
     const {
@@ -84,7 +84,9 @@ describe('Categories Endpoints', () => {
                     .get(`/api/categories/${categoryId}`)
                     .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
                     .expect(404, {
-                        error: 'Category doesn\'t exist'
+                        error: {
+                            message: 'Category doesn\'t exist'
+                        }
                     });
             });
         });
@@ -137,7 +139,7 @@ describe('Categories Endpoints', () => {
         });
     });
 
-    describe.only('POST /categories', () => {
+    describe('POST /categories', () => {
         it('creates category, responding with 201 and the new category', function() {
             this.retries(3);
             const testUser = helpers.makeUsersArray()[0];
@@ -168,10 +170,12 @@ describe('Categories Endpoints', () => {
             it('responds with 404', () => {
                 const categoryId = 123456;
                 return supertest(app)
-                    .delete(`/categories/${categoryId}`)
+                    .delete(`/api/categories/${categoryId}`)
                     .set('Authorization', helpers.makeAuthHeader(testUsers[1]))
                     .expect(404, {
-                        error: 'Photo doesn\'t exist'
+                        error: {
+                            message: 'Category doesn\'t exist'
+                        }
                     });
             });
         });
@@ -180,13 +184,18 @@ describe('Categories Endpoints', () => {
             const testUsers = helpers.makeUsersArray();
             const testCategories = helpers.makeCategoriesArray(testUsers);
 
+            beforeEach('insert users', () => db
+                .into('geekbox_users')
+                .insert(testUsers));
+
             beforeEach('insert categories', () => db
                 .into('geekbox_categories')
                 .insert(testCategories));
 
             it('responds with 200 and removes category', () => {
                 const idToRemove = 2;
-                const expectedCategories = testCategories.filter((category) => category.id !== idToRemove);
+                let expectedCategories = testCategories.filter((category) => category.id !== idToRemove);
+                expectedCategories = expectedCategories.map(category => helpers.makeExpectedCategory(testUsers, category));
 
                 return supertest(app)
                     .delete(`/api/categories/${idToRemove}`)
@@ -213,8 +222,10 @@ describe('Categories Endpoints', () => {
                     .patch(`/api/categories/${categoryId}`)
                     .set('Authorization', helpers.makeAuthHeader(testUsers[1]))
                     .expect(404, {
-                        error: 'Category doesn\'t exist'
-                    });
+                        error: {
+                            message: 'Category doesn\'t exist'
+                    }
+                });
             });
         });
 
@@ -230,10 +241,12 @@ describe('Categories Endpoints', () => {
                 const updateCategory = {
                     title: 'updated category title'
                 };
-                const expectedCategory = {
+                let expectedCategory = {
                     ...testCategories[idToUpdate - 1],
                     ...updateCategory
                 };
+                expectedCategory = helpers.makeExpectedCategory(testUsers, expectedCategory);
+
                 return supertest(app)
                     .patch(`/api/categories/${idToUpdate}`)
                     .set('Authorization', helpers.makeAuthHeader(testUsers[1]))
