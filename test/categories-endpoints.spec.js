@@ -2,7 +2,7 @@ const knex = require('knex');
 const app = require('../src/app');
 const helpers = require('./test-helpers');
 
-describe.only('Categories Endpoints', () => {
+describe('Categories Endpoints', () => {
     let db;
 
     const {
@@ -26,7 +26,7 @@ describe.only('Categories Endpoints', () => {
 
     afterEach('cleanup', () => helpers.cleanTables(db));
 
-    describe('GET /api/categories', () => {
+    describe.only('GET /api/categories', () => {
         context('Given no categories', () => {
             it('responds with 200 and an empty list', () => supertest(app)
                 .get('/api/categories')
@@ -39,15 +39,13 @@ describe.only('Categories Endpoints', () => {
                 testUsers,
                 testCategories,
                 testResources,
-                testComments
+                testComments,
             ));
 
             it('responds with 200 and all of the categories', () => {
-                const expectedCategories = testCategories.map((category) => helpers.makeExpectedResource(
+                const expectedCategories = testCategories.map((category) => helpers.makeExpectedCategory(
                     testUsers,
-                    category,
-                    testResources,
-                    testComments
+                    category
                 ));
                 return supertest(app)
                     .get('/api/categories')
@@ -171,6 +169,7 @@ describe.only('Categories Endpoints', () => {
                 const categoryId = 123456;
                 return supertest(app)
                     .delete(`/categories/${categoryId}`)
+                    .set('Authorization', helpers.makeAuthHeader(testUsers[1]))
                     .expect(404, {
                         error: 'Photo doesn\'t exist'
                     });
@@ -214,9 +213,7 @@ describe.only('Categories Endpoints', () => {
                     .patch(`/api/categories/${categoryId}`)
                     .set('Authorization', helpers.makeAuthHeader(testUsers[1]))
                     .expect(404, {
-                        error: {
-                            message: 'Category doesn\'t exist'
-                        }
+                        error: 'Category doesn\'t exist'
                     });
             });
         });
@@ -225,10 +222,10 @@ describe.only('Categories Endpoints', () => {
             const testCategories = helpers.makeCategoriesArray(testUsers);
 
             beforeEach('insert categories', () => db
-                .into('geekbox_users')
+                .into('geekbox_categories')
                 .insert(testCategories));
 
-            it('responds with 204 and updates the category', () => {
+            it('responds with 200 and updates the category', () => {
                 const idToUpdate = 2;
                 const updateCategory = {
                     title: 'updated category title'
@@ -239,8 +236,9 @@ describe.only('Categories Endpoints', () => {
                 };
                 return supertest(app)
                     .patch(`/api/categories/${idToUpdate}`)
+                    .set('Authorization', helpers.makeAuthHeader(testUsers[1]))
                     .send(updateCategory)
-                    .expect(204)
+                    .expect(200)
                     .then((res) => supertest(app)
                         .get(`/api/categories/${idToUpdate}`)
                         .expect(expectedCategory));
@@ -250,10 +248,11 @@ describe.only('Categories Endpoints', () => {
                 const idToUpdate = 2;
                 return supertest(app)
                     .patch(`/api/categories/${idToUpdate}`)
+                    .set('Authorization', helpers.makeAuthHeader(testUsers[1]))
                     .send({ irrelevantField: 'foo' })
                     .expect(400, {
                         error: {
-                            message: 'Request body must contain \'title\''
+                            message: 'Request body must contain title'
                         }
                     });
             });
