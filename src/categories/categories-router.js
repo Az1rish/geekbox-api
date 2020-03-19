@@ -1,7 +1,7 @@
 const express = require('express');
 const path = require('path');
 const {CategoriesService} = require('./categories-service');
-const { requireAuth } = require('../middleware/jwt-auth');
+const requireAuth = require('../middleware/jwt-auth');
 
 const categoriesRouter = express.Router();
 const jsonBodyParser = express.json();
@@ -23,7 +23,7 @@ categoriesRouter
                 error: 'Missing title in request body'
             });
         }
-
+// console.log(`title: ${title}`);
         const newCategory = { title };
         newCategory.user_id = req.user.id;
 

@@ -43,6 +43,7 @@ authRouter
                         res.send({
                             authToken: AuthService.createJwt(sub, payload)
                         });
+                        // console.log(`Auth: ${authToken}`);
                     });
             })
             .then((user) => {

@@ -8,10 +8,10 @@ TRUNCATE
     RESTART IDENTITY CASCADE;
 
 INSERT INTO geekbox_users (first_name, last_name, user_name, password) VALUES 
-    ('Shane', 'McNeil', 'Az1rish', 'password'),
-    ('John', 'Doe', 'JohnnyBoy', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJpYXQiOjE1ODQ0NzMzNTUsInN1YiI6IlRlc3QgVXNlciAxIn0.B9pJ7AG8mS6bOeXi_3niwQEAxe17wdzOmMIfwiP12LA'),
-    ('Effie', 'McNeil', 'Epang120', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJpYXQiOjE1ODQ0NzMzNTUsInN1YiI6IlRlc3QgVXNlciAxIn0.B9pJ7AG8mS6bOeXi_3niwQEAxe17wdzOmMIfwiP12LA'),
-    ('Dee', 'Hammann', 'Ammie55', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJpYXQiOjE1ODQ0NzMzNTUsInN1YiI6IlRlc3QgVXNlciAxIn0.B9pJ7AG8mS6bOeXi_3niwQEAxe17wdzOmMIfwiP12LA');
+    ('Shane', 'McNeil', 'Az1rish', '$2a$12$t21EDv9K6BExvWGmkZVmL.93iL4XZjWEedivTdS3BmogHAxfh5Tc.'),
+    ('John', 'Doe', 'JohnnyBoy', '$2a$12$t21EDv9K6BExvWGmkZVmL.93iL4XZjWEedivTdS3BmogHAxfh5Tc.'),
+    ('Effie', 'McNeil', 'Epang120', '$2a$12$t21EDv9K6BExvWGmkZVmL.93iL4XZjWEedivTdS3BmogHAxfh5Tc.'),
+    ('Dee', 'Hammann', 'Ammie55', '$2a$12$t21EDv9K6BExvWGmkZVmL.93iL4XZjWEedivTdS3BmogHAxfh5Tc.');
 
 INSERT INTO geekbox_categories (title, user_id) VALUES 
     ('JavaScript', 1),
