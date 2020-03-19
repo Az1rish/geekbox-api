@@ -178,12 +178,15 @@ function calculateAverageCommentRating(comments) {
 }
 
 function makeExpectedCategory(users, category) {
-    console.log(Object.keys(category))
+    // console.log(Object.keys(category))
     // const user = users.find((user) => user.id === (category.user_id || category[user.id]));
+    // console.log(`catUserId: ${category[user:id]}`)
     const user = users.find((user) => {
-        return user.id === category.user_id || user.id === (category.user_id = category[user.id])
+        return user.id == category.user_id || user.id == (category.user_id = category[user.id])
     });
-console.log(user)
+    console.log(`Users: ${Object.keys(users[0])}`)
+    console.log(`Category: ${Object.keys(category)}`)
+console.log(`User: ${user}`)
     return {
         id: category.id,
         title: category.title,

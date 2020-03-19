@@ -166,8 +166,11 @@ describe.only('Categories Endpoints', () => {
                     expect(actualDate).to.eql(expectedDate);
                 })
                 .then((postRes) => {
+                    // console.log(`postRes: ${postRes.body.category}`);
                     const newCat = postRes.body.category;
+                    console.log(`TestUsers: ${Object.values(testUsers[0])}`)
                     // console.log(`Category: ${Object.keys(newCat)}`)
+                    // console.log(`Id: ${newCat.id}`)
                     return supertest(app)
                         .get(`/api/categories/${postRes.body.category.id}`)
                         .expect(helpers.makeExpectedCategory(testUsers, newCat))

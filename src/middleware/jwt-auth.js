@@ -13,7 +13,7 @@ function requireAuth(req, res, next) {
     }
 // console.log(`BearerToken: ${bearerToken}`);
     try {
-        console.log(`bearer in try: ${bearerToken}`)
+        // console.log(`bearer in try: ${bearerToken}`)
         const payload = AuthService.verifyJwt(bearerToken);
 // console.log(`Payload: ${payload}`);
         AuthService.getUserWithUserName(
