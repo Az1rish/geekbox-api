@@ -30,9 +30,78 @@ const ResourcesService = {
                 )
             )
             .leftJoin(
-                
+                'geekbox_comments AS comm',
+                'gres.id',
+                'comm.resource_id'
             )
-    }
+            .leftJoin(
+                'geekbox_categories AS gc',
+                'gres.category_id',
+                'gc.id'
+            )
+            .leftJoin(
+                'geekbox_users AS usr',
+                'gres.user_id',
+                'usr.id'
+            )
+            .groupBy('gres.id', 'gc.id')
+            .orderBy('gres.date_created', 'desc');
+    },
+
+    getResourcesByUser(db, user_id) {
+        return ResourcesService.getAllResources(db)
+            .where('usr.id', user_id);
+    },
+
+    getResourcesByCategory(db, category_id) {
+        return ResourcesService.getAllResources(db)
+            .where('category_id', category_id);
+    },
+
+    deleteResource(db, resource_id, user_id) {
+        return db('geekbox_resources AS gres')
+            .where({
+                'gres.id': resource_id,
+                'gres.user_id': user_id
+            })
+            .del();
+    },
+
+    updateResource(db, resource_id, user_id, newResourceFields) {
+        return db('geekbox_resources AS gres')
+            .where({
+                'gres.id': resource_id,
+                'gres.user_id': user_id
+            })
+            .update(newResourceFields);
+    },
+
+    getById(db, id) {
+        return ResourcesService.getAllResources(db)
+            .where('gres.id', id)
+            .first();
+    },
+
+    getCommentsForResource(db, resource_id) {
+        return db
+            .from('geekbox_comments AS comm')
+            .select(
+                'comm.id',
+                'comm.comment',
+                'comm.date_created',
+                'comm.rating',
+                ...userFields
+            )
+            .where('comm.resource_id', resource_id)
+            .leftJoin(
+                'geekbox_users AS usr',
+                'comm.user_id',
+                'usr.id'
+            )
+            .groupBy('comm.id', 'usr.id');
+    },
+
+    
 }
 
 const userFields = [
