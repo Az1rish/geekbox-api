@@ -27,7 +27,7 @@ describe('Users Endpoints', () => {
         context('User Validation', () => {
             beforeEach('insert users', () => helpers.seedUsers(
                 db,
-                testUsers,
+                testUsers
             ));
 
             const requiredFields = ['first_name', 'last_name', 'user_name', 'password'];
