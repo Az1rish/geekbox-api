@@ -178,15 +178,10 @@ function calculateAverageCommentRating(comments) {
 }
 
 function makeExpectedCategory(users, category) {
-    // console.log(Object.keys(category))
-    // const user = users.find((user) => user.id === (category.user_id || category[user.id]));
-    // console.log(`catUserId: ${category[user:id]}`)
-    // console.log(`users`, users)
     const user = users.find((user) => {
-        // console.log('catUID', category)
-        return user.id == category.user_id || user.id == (category.user_id = category['user:id'])
+        return user.id === category.user_id || user.id === category['user:id']
     });
-console.log('user-helpers', user)
+    
     return {
         id: category.id,
         title: category.title,
@@ -202,7 +197,6 @@ console.log('user-helpers', user)
 }
 
 function makeExpectedResource(users, resource, comments = []) {
-    console.log(`users`, users)
     const user = users.find((user) => user.id === resource.user_id);
 
     const resourceComments = comments.filter((comment) => comment.resource_id === resource.id);

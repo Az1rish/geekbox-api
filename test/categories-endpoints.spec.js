@@ -2,7 +2,7 @@ const knex = require('knex');
 const app = require('../src/app');
 const helpers = require('./test-helpers');
 
-describe.only('Categories Endpoints', () => {
+describe('Categories Endpoints', () => {
     let db;
 
     const {
@@ -175,7 +175,7 @@ describe.only('Categories Endpoints', () => {
         });
     });
 
-    describe.only('DELETE /categories/:category_id', () => {
+    describe('DELETE /categories/:category_id', () => {
         context('Given no categories', () => {
             it('responds with 404', () => {
                 const categoryId = 123456;
@@ -205,14 +205,11 @@ describe.only('Categories Endpoints', () => {
             it('responds with 200 and removes category', () => {
                 const idToRemove = 2;
                 let expectedCategories = testCategories.filter((category) => category.id !== idToRemove);
-                console.log('expectedCategories', expectedCategories)
                 expectedCategories = expectedCategories.map(category => helpers.makeExpectedCategory(testUsers, category));
                
-
                 return supertest(app)
-                .set('Authorization', helpers.makeAuthHeader(testUsers[1]))
                     .delete(`/api/categories/${idToRemove}`)
-                    
+                    .set('Authorization', helpers.makeAuthHeader(testUsers[1]))
                     .expect(200)
                     .then((res) => supertest(app)
                         .get('/api/categories')
