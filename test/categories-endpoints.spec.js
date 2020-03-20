@@ -139,7 +139,7 @@ describe.only('Categories Endpoints', () => {
         });
     });
 
-    describe.only('POST /categories', () => {
+    describe('POST /categories', () => {
         beforeEach('insert users', () => db
             .into('geekbox_users')
             .insert(testUsers));
@@ -166,11 +166,8 @@ describe.only('Categories Endpoints', () => {
                     expect(actualDate).to.eql(expectedDate);
                 })
                 .then((postRes) => {
-                    // console.log(`postRes: ${postRes.body.category}`);
                     const newCat = postRes.body.category;
-                    console.log(`TestUsers: ${Object.values(testUsers[0])}`)
-                    // console.log(`Category: ${Object.keys(newCat)}`)
-                    // console.log(`Id: ${newCat.id}`)
+
                     return supertest(app)
                         .get(`/api/categories/${postRes.body.category.id}`)
                         .expect(helpers.makeExpectedCategory(testUsers, newCat))
@@ -178,7 +175,7 @@ describe.only('Categories Endpoints', () => {
         });
     });
 
-    describe('DELETE /categories/:category_id', () => {
+    describe.only('DELETE /categories/:category_id', () => {
         context('Given no categories', () => {
             it('responds with 404', () => {
                 const categoryId = 123456;
@@ -208,11 +205,14 @@ describe.only('Categories Endpoints', () => {
             it('responds with 200 and removes category', () => {
                 const idToRemove = 2;
                 let expectedCategories = testCategories.filter((category) => category.id !== idToRemove);
+                console.log('expectedCategories', expectedCategories)
                 expectedCategories = expectedCategories.map(category => helpers.makeExpectedCategory(testUsers, category));
+               
 
                 return supertest(app)
+                .set('Authorization', helpers.makeAuthHeader(testUsers[1]))
                     .delete(`/api/categories/${idToRemove}`)
-                    .set('Authorization', helpers.makeAuthHeader(testUsers[1]))
+                    
                     .expect(200)
                     .then((res) => supertest(app)
                         .get('/api/categories')
