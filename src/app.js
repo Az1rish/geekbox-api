@@ -6,6 +6,7 @@ const helmet = require('helmet');
 const { NODE_ENV, CLIENT_ORIGIN } = require('./config');
 const authRouter = require('./auth/auth-router');
 const usersRouter = require('./users/users-router');
+const categoriesRouter = require('./categories/categories-router');
 const app = express()
 
 const morganOption = (NODE_ENV === 'production')
@@ -24,6 +25,7 @@ app.use(
 
 app.use('/api/auth', authRouter);
 app.use('/api/users', usersRouter);
+app.use('/api/categories', categoriesRouter);
 
 app.use(function errorHandler(error, req, res, next) {
     let response;
