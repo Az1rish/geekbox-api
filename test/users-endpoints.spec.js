@@ -152,8 +152,13 @@ describe('Users Endpoints', () => {
             });
         });
 
-        context('Happy path', () => {
+        context.skip('Happy path', () => {
             it('responds 201, serialized user, storing bcrypted password', () => {
+                beforeEach('insert categories', () => helpers.seedUsers(
+                    db,
+                    testUsers,
+                ));
+                
                 const newUser = {
                     user_name: 'test user name',
                     password: '11AAaa!!',
@@ -182,6 +187,7 @@ describe('Users Endpoints', () => {
                         .where({ id: res.body.id })
                         .first()
                         .then((row) => {
+                            console.log(`row`, row)
                             expect(row.user_name).to.eql(newUser.user_name);
                             expect(row.first_name).to.eql(newUser.first_name);
                             expect(row.last_name).to.eql(newUser.last_name);
