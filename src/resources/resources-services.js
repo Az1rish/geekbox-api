@@ -101,8 +101,46 @@ const ResourcesService = {
             .groupBy('comm.id', 'usr.id');
     },
 
-    
-}
+    serializeResources(resources) {
+        return resources.map(this.serializeResource);
+    },
+
+    serializeResource(resource) {
+        const resourceTree = new Treeize();
+
+        const resourceData = resourceTree.grow([resource]).getData()[0];
+
+        return {
+            id: resourceData.id,
+            title: xss(resourceData.title),
+            url: xss(resourceData.url),
+            description: xss(resourceData.description),
+            date_created: resourceData.date_created,
+            user: resourceData.user || {},
+            category: resourceData.category || {},
+            number_of_comments: Number(resourceData.number_of_comments) || 0,
+            average_comment_rating: Math.round(resourceData.average_comment_rating) || 0
+        };
+    },
+
+    serializeResourceComments(comments) {
+        return comments.map(this.serializeResourceComment);
+    },
+
+    serializeResourceComment(comment) {
+        const commentTree = new Treeize();
+        const commentData = commentTree.grow([comment]).getData()[0];
+
+        return {
+            id: commentData.id,
+            comment: xss(commentData.comment),
+            date_created: commentData.date_created,
+            rating: commentData.rating,
+            resource: commentData.resource || {},
+            user: commentData.user || {}
+        };
+    }
+};
 
 const userFields = [
     'usr.id AS user:id',
