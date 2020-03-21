@@ -6,7 +6,7 @@ const helpers = require('./test-helpers');
 describe('Users Endpoints', () => {
     let db;
 
-    const { testUsers } = helpers.makeResourceFixtures();
+    const { testUsers, testCategories, testResources, testComments } = helpers.makeResourceFixtures();
     const testUser = testUsers[0];
 
     before('make knex instance', () => {
@@ -32,10 +32,13 @@ describe('Users Endpoints', () => {
 
     describe('POST /api/users', () => {
         context('User Validation', () => {
-            beforeEach('insert users', () => {
-                helpers.seedUsers(
+            beforeEach('insert tables', () => {
+                helpers.seedResourceTables(
                 db,
-                testUsers
+                testUsers,
+                testCategories, 
+                testResources, 
+                testComments
             );
             console.log('inserted');
                 });

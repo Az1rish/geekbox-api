@@ -143,9 +143,13 @@ describe('Categories Endpoints', () => {
     });
 
     describe('POST /categories', () => {
-        beforeEach('insert users', () => db
-            .into('geekbox_users')
-            .insert(testUsers));
+        beforeEach('insert categories', () => helpers.seedResourceTables(
+            db,
+            testUsers,
+            testCategories,
+            testResources,
+            testComments
+        ));
 
         it('creates category, responding with 201 and the new category', function() {
             
@@ -194,16 +198,13 @@ describe('Categories Endpoints', () => {
         });
 
         context('Given there are categories in the database', () => {
-            const testUsers = helpers.makeUsersArray();
-            const testCategories = helpers.makeCategoriesArray(testUsers);
-
-            beforeEach('insert users', () => db
-                .into('geekbox_users')
-                .insert(testUsers));
-
-            beforeEach('insert categories', () => db
-                .into('geekbox_categories')
-                .insert(testCategories));
+            beforeEach('insert categories', () => helpers.seedResourceTables(
+                db,
+                testUsers,
+                testCategories,
+                testResources,
+                testComments
+            ));
 
             it('responds with 200 and removes category', () => {
                 const idToRemove = 2;
@@ -224,12 +225,7 @@ describe('Categories Endpoints', () => {
     describe('PATCH /api/categories/:category_id', () => {
         context('Given no categories', () => {
             it('responds with 404', () => {
-                const testUsers = helpers.makeUsersArray();
                 const categoryId = 123456;
-
-                beforeEach('insert users', () => db
-                    .into('geekbox_users')
-                    .insert(testUsers));
 
                 return supertest(app)
                     .patch(`/api/categories/${categoryId}`)
@@ -243,11 +239,13 @@ describe('Categories Endpoints', () => {
         });
 
         context('Given there are categories in the database', () => {
-            const testCategories = helpers.makeCategoriesArray(testUsers);
-
-            beforeEach('insert categories', () => db
-                .into('geekbox_categories')
-                .insert(testCategories));
+            beforeEach('insert categories', () => helpers.seedResourceTables(
+                db,
+                testUsers,
+                testCategories,
+                testResources,
+                testComments
+            ));
 
             it('responds with 200 and updates the category', () => {
                 const idToUpdate = 2;
