@@ -3,7 +3,6 @@ const path = require('path');
 const ResourcesService = require('./resources-services');
 const { requireAuth } = require('../middleware/jwt-auth');
 const { isWebUri } = require('valid-url');
-
 const resourcesRouter = express.Router();
 const jsonBodyParser = express.json();
 

@@ -181,9 +181,6 @@ describe.only('Resources Endpoints', () => {
         });
 
         context('Given there are resources in the database', () => {
-            const testUsers = helpers.makeUsersArray();
-            const testResources = helpers.makeResourcesArray(testUsers);
-
             beforeEach('insert resources', () => helpers.seedResourceTables(
                 db,
                 testUsers,
@@ -211,12 +208,15 @@ describe.only('Resources Endpoints', () => {
     describe('PATCH /api/resources/:resource_id', () => {
         context('Given no resources', () => {
             it('responds with 404', () => {
-                const testUsers = helpers.makeUsersArray();
-                const resourceId = 123456;
+                beforeEach('insert resources', () => helpers.seedResourceTables(
+                    db,
+                    testUsers,
+                    testCategories,
+                    testResources,
+                    testComments,
+                ));
 
-                beforeEach('insert users', () => db
-                    .into('geekbox_users')
-                    .insert(testUsers));
+                const resourceId = 123456;
 
                 return supertest(app)
                     .patch(`/api/resources/${resourceId}`)
@@ -230,11 +230,13 @@ describe.only('Resources Endpoints', () => {
         });
 
         context('Given there are resources in the database', () => {
-            const testResources = helpers.makeResourcesArray(testUsers);
-
-            beforeEach('insert resources', () => db
-                .into('geekbox_resources')
-                .insert(testResources));
+            beforeEach('insert resources', () => helpers.seedResourceTables(
+                db,
+                testUsers,
+                testCategories,
+                testResources,
+                testComments,
+            ));
 
             it('responds with 200 and updates the resource', () => {
                 const idToUpdate = 2;
