@@ -157,3 +157,5 @@ const categoryFields = [
     'gc.date_created AS category:date_created',
     'gc.date_modified AS category:date_modified'
 ];
+
+module.exports = ResourcesService;

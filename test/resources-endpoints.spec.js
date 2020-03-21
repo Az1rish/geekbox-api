@@ -37,7 +37,7 @@ describe.only('Resources Endpoints', () => {
             beforeEach('insert resources', () => helpers.seedResourceTables(
                 db,
                 testUsers,
-                testresources,
+                testCategories,
                 testResources,
                 testComments,
             ));
@@ -182,15 +182,15 @@ describe.only('Resources Endpoints', () => {
 
         context('Given there are resources in the database', () => {
             const testUsers = helpers.makeUsersArray();
-            const testresources = helpers.makeResourcesArray(testUsers);
+            const testResources = helpers.makeResourcesArray(testUsers);
 
-            beforeEach('insert users', () => db
-                .into('geekbox_users')
-                .insert(testUsers));
-
-            beforeEach('insert resources', () => db
-                .into('geekbox_resources')
-                .insert(testResources));
+            beforeEach('insert resources', () => helpers.seedResourceTables(
+                db,
+                testUsers,
+                testCategories,
+                testResources,
+                testComments,
+            ));
 
             it('responds with 200 and removes resource', () => {
                 const idToRemove = 2;
