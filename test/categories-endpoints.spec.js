@@ -20,10 +20,7 @@ describe('Categories Endpoints', () => {
         app.set('db', db);
     });
 
-    after('disconnect from db', () => {
-        db.destroy();
-        console.log('destroyed');
-    });
+    after('disconnect from db', () => db.destroy());
 
     before('cleanup', () => helpers.cleanTables(db));
 

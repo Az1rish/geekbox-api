@@ -15,33 +15,23 @@ describe('Users Endpoints', () => {
             connection: process.env.TEST_DATABASE_URL
         });
         app.set('db', db);
-        console.log('knex instance made');
     });
 
-    after('disconnect from db', () => {
-        db.destroy()
-        console.log('disconnected')
-    });
+    after('disconnect from db', () => db.destroy());
 
-    before('cleanup', () => {
-        helpers.cleanTables(db);
-        console.log('cleanedup');
-    });
+    before('cleanup', () => helpers.cleanTables(db));
 
     afterEach('cleanup', () => helpers.cleanTables(db));
 
     describe('POST /api/users', () => {
         context('User Validation', () => {
-            beforeEach('insert tables', () => {
-                helpers.seedResourceTables(
+            beforeEach('insert tables', () => helpers.seedResourceTables(
                 db,
                 testUsers,
                 testCategories, 
                 testResources, 
                 testComments
-            );
-            console.log('inserted');
-                });
+            ));
 
             const requiredFields = ['first_name', 'last_name', 'user_name', 'password'];
 
