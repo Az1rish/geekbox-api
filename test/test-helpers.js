@@ -257,17 +257,19 @@ function makeExpectedResourceComments(users, resourceId, comments) {
     });
 }
 
-function makeMaliciousResource(user) {
+function makeMaliciousResource(user, category) {
+    const { testComments } = this.makeResourceFixtures();
     const maliciousResource = {
         id: 911,
         title: 'Naughty naughty very naughty <script>alert("xss");</script>',
         url: 'http://placehold.it/500x500',
         description: 'Bad image <img src="https://url.to.file.which/does-not.exist" onerror="alert(document.cookie);">. But not <strong>all</strong> bad.',
         date_created: new Date().toISOString(),
-        user_id: user.id
+        user_id: user.id,
+        category_id: category.id
     };
     const expectedResource = {
-        ...makeExpectedResource([user], maliciousResource),
+        ...makeExpectedResource([user], [category], maliciousResource, testComments),
         title: 'Naughty naughty very naughty &lt;script&gt;alert(\"xss\");&lt;/script&gt;',
         description: 'Bad image <img src="https://url.to.file.which/does-not.exist">. But not <strong>all</strong> bad.'
     };
