@@ -174,7 +174,6 @@ describe('Users Endpoints', () => {
                     .send(newUser)
                     .expect(201)
                     .expect((res) => {
-                        // console.log('Res', res.body)
                         expect(res.body).to.have.property('id');
                         expect(res.body.user_name).to.eql(newUser.user_name);
                         expect(res.body.first_name).to.eql(newUser.first_name);
@@ -191,20 +190,16 @@ describe('Users Endpoints', () => {
                         .where({ id: res.body.id })
                         .first()
                         .then((row) => {
-                            // console.log(`row`, row)
                             expect(row.user_name).to.eql(newUser.user_name);
                             expect(row.first_name).to.eql(newUser.first_name);
                             expect(row.last_name).to.eql(newUser.last_name);
                             const expectedDate = new Date().toLocaleString('en', { timeZone: 'UTC' });
                             const actualDate = new Date(row.date_created).toLocaleString();
-                            
-                        // console.log('Dates', actualDate, expectedDate);
                             expect(actualDate).to.eql(expectedDate);
-                        // console.log('Passwords', newUser.password, row.password);
+
                             return bcrypt.compare(newUser.password, row.password);
                         })
                         .then((compareMatch) => {
-                            console.log(compareMatch)
                             expect(compareMatch).to.be.true;
                         }));
             });

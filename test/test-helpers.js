@@ -197,8 +197,6 @@ function makeExpectedCategory(users, category) {
 }
 
 function makeExpectedResource(users, categories, resource, comments = []) {
-    // console.log('resource', resource);
-    // console.log('users', users);
     const user = users.find((user) => {
         return user.id === resource.user_id || user.id === resource['user:id']
     });
@@ -207,14 +205,10 @@ function makeExpectedResource(users, categories, resource, comments = []) {
         return category.id === resource.category_id || category.id === resource['category:id']
     });
 
-    // console.log('category', category);
     const resourceComments = comments.filter((comment) => comment.resource_id === resource.id);
 
     const numOfComments = resourceComments.length;
     const avgCommentRating = calculateAverageCommentRating(resourceComments);
-    console.log(`resourceComments`, resourceComments);
-console.log(`number`, numOfComments);
-console.log(`average`, avgCommentRating);
     return {
         id: resource.id,
         title: resource.title,
@@ -347,8 +341,11 @@ function seedResourceTables(db, users, categories, resources, comments = []) {
     });
 }
 
-function seedMaliciousResource(db, user, resource) {
+function seedMaliciousResource(db, user, categories, resource) {
     return seedUsers(db, [user])
+        .then(() => db
+            .into('geekbox_categories')
+            .insert(categories))
         .then(() => db
             .into('geekbox_resources')
             .insert([resource]));

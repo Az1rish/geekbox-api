@@ -33,18 +33,14 @@ describe('Resources Endpoints', () => {
                 .expect(200, []));
         });
 
-        context.only('Given there are resources in the database', () => {
-            beforeEach('insert resources', () => {
-                helpers.seedResourceTables(
+        context('Given there are resources in the database', () => {
+            beforeEach('insert resources', () => helpers.seedResourceTables(
                     db,
                     testUsers,
                     testCategories,
                     testResources,
                     testComments,
-                );
-                // console.log('testResources', testResources);
-                // console.log('testUsers', testUsers);
-            });
+                ));
 
             it('responds with 200 and all of the resources', () => {
                 const expectedResources = testResources.map((resource) => helpers.makeExpectedResource(
@@ -60,8 +56,8 @@ describe('Resources Endpoints', () => {
         });
 
         context('Given an XSS attack resource', () => {
-            const testUser = helpers.makeUsersArray()[1];
-            const testCategory = helpers.makeCategoriesArray(testUsers)[1];
+            const testUser = testUsers[1];
+            const testCategory = testCategories[1];
             const {
                 maliciousResource,
                 expectedResource
@@ -70,6 +66,7 @@ describe('Resources Endpoints', () => {
             beforeEach('insert malicious resource', () => helpers.seedMaliciousResource(
                 db,
                 testUser,
+                testCategory,
                 maliciousResource,
             ));
 
@@ -83,7 +80,7 @@ describe('Resources Endpoints', () => {
     });
 
     describe('GET /api/resources/:resource_id', () => {
-        context('Given no resources', () => {
+        context.only('Given no resources', () => {
             beforeEach(() => helpers.seedUsers(db, testUsers));
             it('responds with 404', () => {
                 const resourceId = 123456;
@@ -107,7 +104,7 @@ describe('Resources Endpoints', () => {
                 testComments
             ));
 
-            /*it('responds with 200 and the specified resource', () => {
+            it('responds with 200 and the specified resource', () => {
                 const resourceId = 2;
                 const expectedResource = helpers.makeExpectedResource(
                     testUsers,
@@ -120,7 +117,7 @@ describe('Resources Endpoints', () => {
                     .get(`/api/resources/${resourceId}`)
                     .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
                     .expect(200, expectedResource);
-            });*/
+            });
         });
 
         context('Given an XSS attack resource', () => {

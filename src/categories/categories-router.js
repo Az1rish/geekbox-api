@@ -23,7 +23,6 @@ categoriesRouter
                 error: 'Missing title in request body'
             });
         }
-// console.log(`title: ${title}`);
         const newCategory = { title };
         newCategory.user_id = req.user.id;
 

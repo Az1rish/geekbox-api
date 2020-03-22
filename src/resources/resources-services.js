@@ -109,8 +109,6 @@ const ResourcesService = {
         const resourceTree = new Treeize();
 
         const resourceData = resourceTree.grow([resource]).getData()[0];
-console.log('Number', resourceData.numOfComments);
-console.log('AVe', resourceData.avgCommentRating);
         return {
             id: resourceData.id,
             title: xss(resourceData.title),
@@ -119,8 +117,8 @@ console.log('AVe', resourceData.avgCommentRating);
             date_created: resourceData.date_created,
             user: resourceData.user || {},
             category: resourceData.category || {},
-            numOfComments: Number(resourceData.numOfComments) || 0,
-            avgCommentRating: Math.round(resourceData.avgCommentRating) || 0
+            numOfComments: Number(resourceData.numofcomments) || 0,
+            avgCommentRating: Math.round(resourceData.avgcommentrating) || 0
         };
     },
 
