@@ -33,7 +33,7 @@ describe('Resources Endpoints', () => {
                 .expect(200, []));
         });
 
-       /* context('Given there are resources in the database', () => {
+        context.only('Given there are resources in the database', () => {
             beforeEach('insert resources', () => {
                 helpers.seedResourceTables(
                     db,
@@ -42,8 +42,8 @@ describe('Resources Endpoints', () => {
                     testResources,
                     testComments,
                 );
-                console.log('testResources', testResources);
-                console.log('testUsers', testUsers);
+                // console.log('testResources', testResources);
+                // console.log('testUsers', testUsers);
             });
 
             it('responds with 200 and all of the resources', () => {
@@ -57,7 +57,7 @@ describe('Resources Endpoints', () => {
                     .get('/api/resources')
                     .expect(200, expectedResources);
             });
-        });*/
+        });
 
         context('Given an XSS attack resource', () => {
             const testUser = helpers.makeUsersArray()[1];

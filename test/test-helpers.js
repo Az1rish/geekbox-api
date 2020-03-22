@@ -197,8 +197,8 @@ function makeExpectedCategory(users, category) {
 }
 
 function makeExpectedResource(users, categories, resource, comments = []) {
-    console.log('resource', resource);
-    console.log('users', users);
+    // console.log('resource', resource);
+    // console.log('users', users);
     const user = users.find((user) => {
         return user.id === resource.user_id || user.id === resource['user:id']
     });
@@ -207,12 +207,14 @@ function makeExpectedResource(users, categories, resource, comments = []) {
         return category.id === resource.category_id || category.id === resource['category:id']
     });
 
-    console.log('category', category);
+    // console.log('category', category);
     const resourceComments = comments.filter((comment) => comment.resource_id === resource.id);
 
     const numOfComments = resourceComments.length;
     const avgCommentRating = calculateAverageCommentRating(resourceComments);
-
+    console.log(`resourceComments`, resourceComments);
+console.log(`number`, numOfComments);
+console.log(`average`, avgCommentRating);
     return {
         id: resource.id,
         title: resource.title,

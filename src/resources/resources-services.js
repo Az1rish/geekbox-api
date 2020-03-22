@@ -23,10 +23,10 @@ const ResourcesService = {
                 ...userFields,
                 ...categoryFields,
                 db.raw(
-                    'count(DISTINCT comm) AS number_of_comments'
+                    'count(DISTINCT comm) AS numOfComments'
                 ),
                 db.raw(
-                    'AVG(comm.rating) AS average_comment_rating'
+                    'AVG(comm.rating) AS avgCommentRating'
                 )
             )
             .leftJoin(
@@ -118,8 +118,8 @@ const ResourcesService = {
             date_created: resourceData.date_created,
             user: resourceData.user || {},
             category: resourceData.category || {},
-            number_of_comments: Number(resourceData.number_of_comments) || 0,
-            average_comment_rating: Math.round(resourceData.average_comment_rating) || 0
+            numOfComments: Number(resourceData.numOfComments) || 0,
+            avgCommentRating: Math.round(resourceData.avgCommentRating) || 0
         };
     },
 
