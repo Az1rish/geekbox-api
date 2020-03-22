@@ -51,3 +51,4 @@ resourcesRouter
             .catch(next)
     })*/
 
+module.exports = resourcesRouter;

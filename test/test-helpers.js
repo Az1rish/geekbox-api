@@ -196,9 +196,18 @@ function makeExpectedCategory(users, category) {
     };
 }
 
-function makeExpectedResource(users, resource, comments = []) {
-    const user = users.find((user) => user.id === resource.user_id);
+function makeExpectedResource(users, categories, resource, comments = []) {
+    console.log('resource', resource);
+    console.log('users', users);
+    const user = users.find((user) => {
+        return user.id === resource.user_id || user.id === resource['user:id']
+    });
+    
+    const category = categories.find((category) => {
+        return category.id === resource.category_id || category.id === resource['category:id']
+    });
 
+    console.log('category', category);
     const resourceComments = comments.filter((comment) => comment.resource_id === resource.id);
 
     const numOfComments = resourceComments.length;
@@ -218,6 +227,11 @@ function makeExpectedResource(users, resource, comments = []) {
             last_name: user.last_name,
             user_name: user.user_name,
             date_created: user.date_created
+        },
+        category: {
+            id: category.id,
+            date_created: category.date_created,
+            title: category.title
         }
     };
 }

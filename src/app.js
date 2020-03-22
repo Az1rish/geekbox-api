@@ -26,7 +26,7 @@ app.use(
 
 app.use('/api/auth', authRouter);
 app.use('/api/users', usersRouter);
-// app.use('/api/resources', resourcesRouter);
+app.use('/api/resources', resourcesRouter);
 app.use('/api/categories', categoriesRouter);
 
 app.use(function errorHandler(error, req, res, next) {

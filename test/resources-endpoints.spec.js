@@ -28,28 +28,34 @@ describe('Resources Endpoints', () => {
 
     describe('GET /api/resources', () => {
         context('Given no resources', () => {
-            it('responds with 200 and an empty list', () => supertest(app)
+            it.only('responds with 200 and an empty list', () => supertest(app)
                 .get('/api/resources')
                 .expect(200, []));
         });
 
         context('Given there are resources in the database', () => {
-            beforeEach('insert resources', () => helpers.seedResourceTables(
-                db,
-                testUsers,
-                testCategories,
-                testResources,
-                testComments,
-            ));
+            beforeEach('insert resources', () => {
+                helpers.seedResourceTables(
+                    db,
+                    testUsers,
+                    testCategories,
+                    testResources,
+                    testComments,
+                );
+                console.log('testResources', testResources);
+                console.log('testUsers', testUsers);
+            });
 
             it('responds with 200 and all of the resources', () => {
-                const expectedresources = testresources.map((resource) => helpers.makeExpectedResource(
+                const expectedResources = testResources.map((resource) => helpers.makeExpectedResource(
                     testUsers,
-                    resource
+                    testCategories,
+                    resource,
+                    testComments
                 ));
                 return supertest(app)
                     .get('/api/resources')
-                    .expect(200, expectedresources);
+                    .expect(200, expectedResources);
             });
         });
 

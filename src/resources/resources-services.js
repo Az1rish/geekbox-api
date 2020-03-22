@@ -44,7 +44,7 @@ const ResourcesService = {
                 'gres.user_id',
                 'usr.id'
             )
-            .groupBy('gres.id', 'gc.id')
+            .groupBy('gres.id', 'gc.id', 'usr.id')
             .orderBy('gres.date_created', 'desc');
     },
 
@@ -154,8 +154,7 @@ const userFields = [
 const categoryFields = [
     'gc.id AS category:id',
     'gc.title AS category:title',
-    'gc.date_created AS category:date_created',
-    'gc.date_modified AS category:date_modified'
+    'gc.date_created AS category:date_created'
 ];
 
 module.exports = ResourcesService;
