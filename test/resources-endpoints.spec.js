@@ -28,7 +28,7 @@ describe('Resources Endpoints', () => {
 
     describe('GET /api/resources', () => {
         context('Given no resources', () => {
-            it.only('responds with 200 and an empty list', () => supertest(app)
+            it('responds with 200 and an empty list', () => supertest(app)
                 .get('/api/resources')
                 .expect(200, []));
         });
@@ -198,7 +198,12 @@ describe('Resources Endpoints', () => {
             it('responds with 200 and removes resource', () => {
                 const idToRemove = 2;
                 let expectedResources = testResources.filter((resource) => resource.id !== idToRemove);
-                expectedResources = expectedResources.map(resource => helpers.makeExpectedResource(testUsers, resource));
+                expectedResources = expectedResources.map(resource => helpers.makeExpectedResource(
+                    testUsers, 
+                    testCategories,
+                    resource,
+                    testComments
+                ));
 
                 return supertest(app)
                     .delete(`/api/resources/${idToRemove}`)
@@ -253,7 +258,12 @@ describe('Resources Endpoints', () => {
                     ...testResources[idToUpdate - 1],
                     ...updateResource
                 };
-                expectedResource = helpers.makeExpectedResource(testUsers, expectedResource);
+                expectedResource = helpers.makeExpectedResource(
+                    testUsers, 
+                    testCategories, 
+                    expectedResource, 
+                    testComments
+                );
 
                 return supertest(app)
                     .patch(`/api/resources/${idToUpdate}`)
