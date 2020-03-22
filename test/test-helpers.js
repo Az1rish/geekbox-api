@@ -177,6 +177,25 @@ function calculateAverageCommentRating(comments) {
     return Math.round(sum / comments.length);
 }
 
+function makeExpectedCategory(users, category) {
+    const user = users.find((user) => {
+        return user.id === category.user_id || user.id === category['user:id']
+    });
+    
+    return {
+        id: category.id,
+        title: category.title,
+        date_created: category.date_created,
+        user: {
+            id: user.id,
+            user_name: user.user_name,
+            first_name: user.first_name,
+            last_name: user.last_name,
+            date_created: user.date_created
+        }
+    };
+}
+
 function makeExpectedResource(users, resource, comments = []) {
     const user = users.find((user) => user.id === resource.user_id);
 
@@ -244,6 +263,23 @@ function makeMaliciousResource(user) {
     };
 }
 
+function makeMaliciousCategory(user) {
+    const maliciousCategory = {
+        id: 911,
+        title: 'Naughty naughty very naughty <script>alert("xss");</script>Bad image <img src="https://url.to.file.which/does-not.exist" onerror="alert(document.cookie);">. But not <strong>all</strong> bad.',
+        date_created: new Date().toISOString(),
+        user_id: user.id
+    };
+    const expectedCategory = {
+        ...makeExpectedCategory([user], maliciousCategory),
+        title: 'Naughty naughty very naughty &lt;script&gt;alert(\"xss\");&lt;/script&gt;Bad image <img src="https://url.to.file.which/does-not.exist">. But not <strong>all</strong> bad.'
+    };
+    return {
+        maliciousCategory,
+        expectedCategory
+    };
+}
+
 function makeResourceFixtures() {
     const testUsers = makeUsersArray();
     const testCategories = makeCategoriesArray(testUsers);
@@ -280,7 +316,7 @@ function seedResourceTables(db, users, categories, resources, comments = []) {
     return db.transaction(async (trx) => {
         await seedUsers(trx, users);
         await trx.into('geekbox_categories').insert(categories);
-        await trx.raw('SELECT setval(\'geekbox_categories_id_seq\', ?)', [categories[categories.length].id],
+        await trx.raw('SELECT setval(\'geekbox_categories_id_seq\', ?)', [categories[categories.length - 1].id],
         );
         await trx.into('geekbox_resources').insert(resources);
         await trx.raw('SELECT setval(\'geekbox_resources_id_seq\', ?)', [resources[resources.length - 1].id],
@@ -300,12 +336,20 @@ function seedMaliciousResource(db, user, resource) {
             .insert([resource]));
 }
 
-function makeAuthHeader(user, secret = process.env.JWT_SECRET) {
+function seedMaliciousCategory(db, user, category) {
+    return seedUsers(db, [user])
+        .then(() => db
+            .into('geekbox_categories')
+            .insert([category]));
+}
+
+function makeAuthHeader(user, secret = process.env.JWT_SECRET) {  
     const token = jwt.sign({ user_id: user.id },
         secret, {
             subject: user.user_name,
             algorithm: 'HS256'
         });
+
     return `Bearer ${token}`;
 }
 
@@ -314,10 +358,13 @@ module.exports = {
     makeCategoriesArray,
     makeResourcesArray,
     makeCommentsArray,
+    makeExpectedCategory,
     makeExpectedResource,
     makeExpectedResourceComments,
     makeResourceFixtures,
 
+    seedMaliciousCategory,
+    makeMaliciousCategory,
     makeMaliciousResource,
     makeAuthHeader,
     cleanTables,

@@ -4,6 +4,19 @@ const AuthService = require('./auth-service');
 const authRouter = express.Router();
 const jsonBodyParser = express.json();
 
+const getCircularReplacer = () => {
+    const seen = new WeakSet();
+    return (key, value) => {
+      if (typeof value === "object" && value !== null) {
+        if (seen.has(value)) {
+          return;
+        }
+        seen.add(value);
+      }
+      return value;
+    };
+  };
+
 authRouter
     .post('/signin', jsonBodyParser, (req, res, next) => {
         const { user_name, password } = req.body;
@@ -46,7 +59,7 @@ authRouter
                     });
             })
             .then((user) => {
-                res.json(user);
+                res.status(user).json(getCircularReplacer());
             })
             .catch(next);
     });

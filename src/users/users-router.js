@@ -52,7 +52,7 @@ usersRouter
                             last_name,
                             date_created: 'now()'
                         };
-
+// console.log(`Password: ${newUser.password}`);
                         return UsersService.insertUser(
                             req.app.get('db'),
                             newUser
