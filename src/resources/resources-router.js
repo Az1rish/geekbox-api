@@ -15,7 +15,7 @@ resourcesRouter
             })
             .catch(next);
     })
-    .post(requireAuth, jsonBodyParser, (req, res) => {
+    /*.post(requireAuth, jsonBodyParser, (req, res) => {
         for (const field of ['title', 'url', 'description']) {
             if (!req.body[field]) {
                 return res.status(400).json({
@@ -49,5 +49,5 @@ resourcesRouter
                     .json(ResourcesService.serializeResource(resource))
             })
             .catch(next)
-    })
+    })*/
 
