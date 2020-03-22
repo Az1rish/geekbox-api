@@ -6,6 +6,7 @@ const helmet = require('helmet');
 const { NODE_ENV, CLIENT_ORIGIN } = require('./config');
 const authRouter = require('./auth/auth-router');
 const usersRouter = require('./users/users-router');
+const resourcesRouter = require('./resources/resources-router');
 const categoriesRouter = require('./categories/categories-router');
 const app = express()
 
@@ -25,6 +26,7 @@ app.use(
 
 app.use('/api/auth', authRouter);
 app.use('/api/users', usersRouter);
+app.use('/api/resources', resourcesRouter);
 app.use('/api/categories', categoriesRouter);
 
 app.use(function errorHandler(error, req, res, next) {
