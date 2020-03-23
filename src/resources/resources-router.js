@@ -1,8 +1,9 @@
 const express = require('express');
 const path = require('path');
 const ResourcesService = require('./resources-services');
-const { requireAuth } = require('../middleware/jwt-auth');
+const requireAuth = require('../middleware/jwt-auth');
 const { isWebUri } = require('valid-url');
+
 const resourcesRouter = express.Router();
 const jsonBodyParser = express.json();
 
@@ -15,8 +16,8 @@ resourcesRouter
             })
             .catch(next);
     })
-    /*.post(requireAuth, jsonBodyParser, (req, res) => {
-        for (const field of ['title', 'url', 'description']) {
+    .post(requireAuth, jsonBodyParser, (req, res, next) => {
+        for (const field of ['title', 'url', 'description', 'category_id', 'user_id']) {
             if (!req.body[field]) {
                 return res.status(400).json({
                     error: {
@@ -26,7 +27,7 @@ resourcesRouter
             }
         }
 
-        const { title, url, description } = req.body;
+        const { title, url, description, category_id, user_id } = req.body;
 
         if (!isWebUri(url)) {
             return res.status(400).json({
@@ -36,7 +37,7 @@ resourcesRouter
             })
         }
 
-        const newResource = { title, url, description };
+        const newResource = { title, url, description, category_id, user_id };
 
         ResourcesService.insertResource(
             req.app.get('db'),
@@ -49,6 +50,63 @@ resourcesRouter
                     .json(ResourcesService.serializeResource(resource))
             })
             .catch(next)
-    })*/
+    })
+
+resourcesRouter
+    .route('/:resource_id')
+    .all((req, res, next) => {
+        ResourcesService.getById(
+            req.app.get('db'),
+            req.params.resource_id
+        )
+            .then(resource => {
+                if (!resource) {
+                    return res.status(404).json({
+                        error: {
+                            message: `Resource doesn't exist`
+                        }
+                    })
+                }
+                res.resource = resource;
+                next()
+            })
+            .catch(next)
+    })
+    .get((req, res, next) => {
+        res.json(ResourcesService.serializeResource(res.article))
+    })
+    .delete((req, res, next) => {
+        ResourcesService.deleteResource(
+            req.app.get('db'),
+            req.params.resource_id
+        )
+            .then(() => {
+                res.status(204).end()
+            })
+            .catch(next)
+    })
+    .patch(jsonBodyParser, (req, res, next) => {
+        const { title, url, description } = req.body
+        const resourceToUpdate = { title, url, description }
+
+        const numberOfValues = Object.values(resourceToUpdate).filter(Boolean).length
+        if (numberOfValues === 0) {
+            return res.status(400).json({
+                error: {
+                    message: `Request body must contain either 'title', 'url', or 'description'`
+                }
+            })
+        }
+
+        ResourcesService.updateResource(
+            req.app.get('db'),
+            req.params.resource_id,
+            resourceToUpdate
+        )
+            .then(() => {
+                res.status(204).end()
+            })
+            .catch(next)
+    })
 
 module.exports = resourcesRouter;

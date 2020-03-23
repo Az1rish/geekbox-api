@@ -2,7 +2,7 @@ const knex = require('knex');
 const app = require('../src/app');
 const helpers = require('./test-helpers');
 
-describe('Resources Endpoints', () => {
+describe.only('Resources Endpoints', () => {
     let db;
 
     const {
@@ -80,7 +80,7 @@ describe('Resources Endpoints', () => {
     });
 
     describe('GET /api/resources/:resource_id', () => {
-        context.only('Given no resources', () => {
+        context('Given no resources', () => {
             beforeEach(() => helpers.seedUsers(db, testUsers));
             it('responds with 404', () => {
                 const resourceId = 123456;
@@ -145,11 +145,24 @@ describe('Resources Endpoints', () => {
     });
 
     describe('POST /resources', () => {
+        beforeEach('insert resources', () => helpers.seedResourceTables(
+            db,
+            testUsers,
+            testCategories,
+            testResources,
+            testComments
+        ));
         it('creates resource, responding with 201 and the new resource', function() {
+            
             this.retries(3);
-            const testUser = helpers.makeUsersArray()[0];
+            const testUser = testUsers[0];
+            const testCategory = testCategories[0];
             const newResource = {
-                title: 'Test resource'
+                title: 'Test resource',
+                url: 'http://www.url.com',
+                description: 'Test description',
+                user_id: testUser.id,
+                category_id: testCategory.id
             };
             return supertest(app)
                 .post('/api/resources')
@@ -158,15 +171,21 @@ describe('Resources Endpoints', () => {
                 .expect(201)
                 .expect((res) => {
                     expect(res.body.title).to.eql(newResource.title);
+                    expect(res.body.url).to.eql(newResource.url);
+                    expect(res.body.description).to.eql(newResource.description);
+                    expect(res.body.user.id).to.eql(newResource.user_id);
+                    expect(res.body.category.id).to.eql(newResource.category_id);
                     expect(res.body).to.have.property('id');
-                    expect(res.headers.location).to.eql(`/resources/${res.body.id}`);
+                    expect(res.headers.location).to.eql(`/api/resources/${res.body.id}`);
                     const expectedDate = new Date().toLocaleString('en', { timeZone: 'UTC' });
                     const actualDate = new Date(res.body.date_created).toLocaleString();
                     expect(actualDate).to.eql(expectedDate);
                 })
-                .then((postRes) => supertest(app)
-                    .get(`/api/resources/${postRes.body.id}`)
-                    .expect(postRes.body));
+                .then((postRes) => {
+                    return supertest(app)
+                            .get(`/api/resources/${postRes.body.id}`)
+                            .expect(postRes.body);
+                });
         });
     });
 
@@ -179,7 +198,7 @@ describe('Resources Endpoints', () => {
                     .set('Authorization', helpers.makeAuthHeader(testUsers[1]))
                     .expect(404, {
                         error: {
-                            message: 'resource doesn\'t exist'
+                            message: 'Resource doesn\'t exist'
                         }
                     });
             });
