@@ -2,7 +2,7 @@ const knex = require('knex');
 const app = require('../src/app');
 const helpers = require('./test-helpers');
 
-describe('Comments Endpoints', function() {
+describe.only('Comments Endpoints', function() {
     let db;
 
     const {
@@ -37,7 +37,7 @@ describe('Comments Endpoints', function() {
             )
         })
 
-        it(`creates a comment, responding with 201 and the new comment`, function() {
+        it.only(`creates a comment, responding with 201 and the new comment`, function() {
             this.retries(3);
             const testResource = testResources[0];
             const testUser = testUsers[0];
@@ -46,7 +46,7 @@ describe('Comments Endpoints', function() {
                 rating: 3,
                 resource_id: testResource.id,
             }
-
+console.log('Auth', helpers.makeAuthHeader(testUser));
             return supertest(app)
                 .post('/api/comments')
                 .set('Authorization', helpers.makeAuthHeader(testUser))
