@@ -75,7 +75,7 @@ resourcesRouter
     .get((req, res, next) => {
         res.json(ResourcesService.serializeResource(res.article))
     })
-    .delete((req, res, next) => {
+    .delete(requireAuth, (req, res, next) => {
         ResourcesService.deleteResource(
             req.app.get('db'),
             req.params.resource_id
@@ -85,7 +85,7 @@ resourcesRouter
             })
             .catch(next)
     })
-    .patch(jsonBodyParser, (req, res, next) => {
+    .patch(requireAuth, jsonBodyParser, (req, res, next) => {
         const { title, url, description } = req.body
         const resourceToUpdate = { title, url, description }
 
