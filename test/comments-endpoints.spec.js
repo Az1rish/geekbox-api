@@ -2,7 +2,7 @@ const knex = require('knex');
 const app = require('../src/app');
 const helpers = require('./test-helpers');
 
-describe.only('Comments Endpoints', function() {
+describe.only('Comments Endpoints', () => {
     let db;
 
     const {
@@ -27,17 +27,15 @@ describe.only('Comments Endpoints', function() {
     afterEach('cleanup', () => helpers.cleanTables(db));
 
     describe(`POST /api/comments`, () => {
-        beforeEach('insert resources', () => {
-            helpers.seedResourceTables(
+        beforeEach('insert resources', () => helpers.seedResourceTables(
                 db,
                 testUsers,
                 testCategories,
                 testResources,
                 testComments,
-            )
-        })
+        ));
 
-        it.only(`creates a comment, responding with 201 and the new comment`, function() {
+        it(`creates a comment, responding with 201 and the new comment`, function() {
             this.retries(3);
             const testResource = testResources[0];
             const testUser = testUsers[0];
@@ -49,12 +47,12 @@ describe.only('Comments Endpoints', function() {
 console.log('Auth', helpers.makeAuthHeader(testUser));
             return supertest(app)
                 .post('/api/comments')
-                .set('Authorization', helpers.makeAuthHeader(testUser))
+                .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
                 .send(newComment)
                 .expect(201)
-                .expect(res => {
+                .expect((res) => {
                     expect(res.body).to.have.property('id')
-                    expect(res.body.comment).to.eql(newComment.rating)
+                    expect(res.body.comment).to.eql(newComment.comment)
                     expect(res.body.rating).to.eql(newComment.rating)
                     expect(res.body.resource_id).to.eql(newComment.resource_id)
                     expect(res.body.user.id).to.eql(testUser.id)
@@ -63,8 +61,7 @@ console.log('Auth', helpers.makeAuthHeader(testUser));
                     const actualDate = new Date(res.body.date_created).toLocaleString();
                     expect(actualDate).to.eql(expectedDate);
                 })
-                .expect(res => 
-                    db
+                .expect((res) => db
                         .from('geekbox_comments')
                         .select('*')
                         .where({ id: res.body.id })
