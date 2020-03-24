@@ -152,8 +152,8 @@ describe('Users Endpoints', () => {
             });
         });
 
-        context('Happy path', () => {
-            it('responds 201, serialized user, storing bcrypted password', () => {
+        context.only('Happy path', () => {
+            it('responds 201, serialized user, storing bcrypted password', function() {
                 beforeEach('insert tables', () => helpers.seedResourceTables(
                     db,
                     testUsers,
@@ -201,7 +201,12 @@ describe('Users Endpoints', () => {
                         })
                         .then((compareMatch) => {
                             expect(compareMatch).to.be.true;
-                        }));
+                        })
+                        .catch(err => {
+                            console.log(err)
+                            next(err);
+                        })
+                    );
             });
         });
     });

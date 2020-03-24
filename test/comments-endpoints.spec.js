@@ -44,7 +44,7 @@ describe('Comments Endpoints', () => {
                 rating: 3,
                 resource_id: testResource.id,
             }
-console.log('Auth', helpers.makeAuthHeader(testUser));
+            
             return supertest(app)
                 .post('/api/comments')
                 .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
