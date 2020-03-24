@@ -2,7 +2,7 @@ const knex = require('knex');
 const app = require('../src/app');
 const helpers = require('./test-helpers');
 
-describe('Resources Endpoints', () => {
+describe.only('Resources Endpoints', () => {
     let db;
 
     const {
@@ -131,6 +131,7 @@ describe('Resources Endpoints', () => {
             beforeEach('insert malicious resource', () => helpers.seedMaliciousResource(
                 db,
                 testUser,
+                testCategory,
                 maliciousResource,
             ));
 
@@ -213,7 +214,7 @@ describe('Resources Endpoints', () => {
                 testComments,
             ));
 
-            it('responds with 200 and removes resource', () => {
+            it('responds with 204 and removes resource', () => {
                 const idToRemove = 2;
                 let expectedResources = testResources.filter((resource) => resource.id !== idToRemove);
                 expectedResources = expectedResources.map(resource => helpers.makeExpectedResource(
@@ -226,7 +227,7 @@ describe('Resources Endpoints', () => {
                 return supertest(app)
                     .delete(`/api/resources/${idToRemove}`)
                     .set('Authorization', helpers.makeAuthHeader(testUsers[1]))
-                    .expect(200)
+                    .expect(204)
                     .then((res) => supertest(app)
                         .get('/api/resources')
                         .expect(expectedResources));
@@ -236,15 +237,15 @@ describe('Resources Endpoints', () => {
 
     describe('PATCH /api/resources/:resource_id', () => {
         context('Given no resources', () => {
-            it('responds with 404', () => {
-                beforeEach('insert resources', () => helpers.seedResourceTables(
-                    db,
-                    testUsers,
-                    testCategories,
-                    testResources,
-                    testComments,
-                ));
+            beforeEach('insert resources', () => helpers.seedResourceTables(
+                db,
+                testUsers,
+                testCategories,
+                testResources,
+                testComments,
+            ));
 
+            it('responds with 404', () => {
                 const resourceId = 123456;
 
                 return supertest(app)
@@ -267,7 +268,7 @@ describe('Resources Endpoints', () => {
                 testComments,
             ));
 
-            it('responds with 200 and updates the resource', () => {
+            it('responds with 204 and updates the resource', () => {
                 const idToUpdate = 2;
                 const updateResource = {
                     title: 'updated resource title'
@@ -287,7 +288,7 @@ describe('Resources Endpoints', () => {
                     .patch(`/api/resources/${idToUpdate}`)
                     .set('Authorization', helpers.makeAuthHeader(testUsers[1]))
                     .send(updateResource)
-                    .expect(200)
+                    .expect(204)
                     .then((res) => supertest(app)
                         .get(`/api/resources/${idToUpdate}`)
                         .expect(expectedResource));
@@ -301,7 +302,7 @@ describe('Resources Endpoints', () => {
                     .send({ irrelevantField: 'foo' })
                     .expect(400, {
                         error: {
-                            message: 'Request body must contain title'
+                            message: `Request body must contain either 'title', 'url', or 'description'`
                         }
                     });
             });

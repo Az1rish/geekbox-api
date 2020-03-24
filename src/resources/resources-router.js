@@ -73,12 +73,13 @@ resourcesRouter
             .catch(next)
     })
     .get((req, res, next) => {
-        res.json(ResourcesService.serializeResource(res.article))
+        res.json(ResourcesService.serializeResource(res.resource))
     })
     .delete(requireAuth, (req, res, next) => {
         ResourcesService.deleteResource(
             req.app.get('db'),
-            req.params.resource_id
+            req.params.resource_id,
+            req.user.id
         )
             .then(() => {
                 res.status(204).end()
@@ -101,6 +102,7 @@ resourcesRouter
         ResourcesService.updateResource(
             req.app.get('db'),
             req.params.resource_id,
+            req.user.id,
             resourceToUpdate
         )
             .then(() => {
