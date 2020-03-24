@@ -152,7 +152,7 @@ describe('Users Endpoints', () => {
             });
         });
 
-        context.only('Happy path', () => {
+        context('Happy path', () => {
             it('responds 201, serialized user, storing bcrypted password', function() {
                 beforeEach('insert tables', () => helpers.seedResourceTables(
                     db,
