@@ -15,7 +15,7 @@
   },
   "keywords": [],
   "engines": {
-    "node": "10.16.0"
+    "node": "12.16.1"
   },
   "author": "Shane McNeil <shanemcneil19@gmail.com>",
   "license": "ISC",
@@ -28,6 +28,7 @@
     "jsonwebtoken": "^8.5.1",
     "knex": "^0.20.13",
     "minimist": "^1.2.5",
+    "mocha": "^7.1.1",
     "morgan": "^1.9.1",
     "pg": "^7.18.2",
     "treeize": "^2.1.2",
@@ -36,7 +37,6 @@
   },
   "devDependencies": {
     "chai": "^4.2.0",
-    "mocha": "^6.2.2",
     "nodemon": "^2.0.2",
     "postgrator-cli": "^3.2.0",
     "supertest": "^4.0.2"

@@ -111,4 +111,17 @@ resourcesRouter
             .catch(next)
     })
 
+resourcesRouter
+    .route('/:resource_id/comments')
+    .get((req, res, next) => {
+        ResourcesService.getCommentsForResource(
+            req.app.get('db'),
+            req.params.resource_id
+        )
+            .then((comments) => {
+                res.json(ResourcesService.serializeResourceComments(comments))
+            })
+            .catch(next)
+    })
+
 module.exports = resourcesRouter;

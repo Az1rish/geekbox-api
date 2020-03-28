@@ -90,15 +90,21 @@ const ResourcesService = {
                 'comm.comment',
                 'comm.date_created',
                 'comm.rating',
-                ...userFields
+                ...userFields,
+                ...resourceFields
             )
             .where('comm.resource_id', resource_id)
             .leftJoin(
                 'geekbox_users AS usr',
                 'comm.user_id',
                 'usr.id'
+            )         
+            .leftJoin(
+                'geekbox_resources AS gres',
+                'comm.resource_id',
+                'gres.id'
             )
-            .groupBy('comm.id', 'usr.id');
+            .groupBy('comm.id', 'usr.id', 'gres.id');
     },
 
     serializeResources(resources) {
@@ -148,6 +154,14 @@ const userFields = [
     'usr.last_name AS user:last_name',
     'usr.date_created AS user:date_created',
     'usr.date_modified AS user:date_modified'
+];
+
+const resourceFields = [
+    'gres.id AS resource:id',
+    'gres.title AS resource:title',
+    'gres.url AS resource:url',
+    'gres.description AS resource:description',
+    'gres.date_created AS resource:date_created'
 ];
 
 const categoryFields = [
