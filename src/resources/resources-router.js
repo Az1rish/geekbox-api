@@ -17,7 +17,7 @@ resourcesRouter
             .catch(next);
     })
     .post(requireAuth, jsonBodyParser, (req, res, next) => {
-        for (const field of ['title', 'url', 'description', 'category_id', 'user_id']) {
+        for (const field of ['title', 'url', 'description', 'category_id']) {
             if (!req.body[field]) {
                 return res.status(400).json({
                     error: {
@@ -27,7 +27,9 @@ resourcesRouter
             }
         }
 
-        const { title, url, description, category_id, user_id } = req.body;
+        const { title, url, description, category_id } = req.body;
+
+        const user_id = req.user.id;
 
         if (!isWebUri(url)) {
             return res.status(400).json({

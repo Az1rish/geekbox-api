@@ -14,7 +14,6 @@ usersRouter
             .catch(next);
     })
     .post('/', jsonBodyParser, (req, res, next) => {
-        console.log('REQ', req.body)
         const { password, user_name, first_name, last_name } = req.body;
 
         for (const field of ['first_name', 'last_name', 'user_name', 'password']) {
