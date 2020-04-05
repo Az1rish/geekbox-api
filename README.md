@@ -1,26 +1,69 @@
-# Express Boilerplate!
+# GeekBox
 
-This is a boilerplate project used for starting new projects!
+[geekbox.now.sh](https://geekbox.now.sh)
 
-## Set up
+![GeekBox Landing Page](./geekbox-screenshot.png)
 
-Complete the following steps to start a new project (NEW-PROJECT-NAME):
+## API Documentation
 
-1. Clone this repository to your local machine `git clone BOILERPLATE-URL NEW-PROJECTS-NAME`
-2. `cd` into the cloned repository
-3. Make a fresh start of the git history for this project with `rm -rf .git && git init`
-4. Install the node dependencies `npm install`
-5. Move the example Environment file to `.env` that will be ignored by git and read by the express server `mv example.env .env`
-6. Edit the contents of the `package.json` to use NEW-PROJECT-NAME instead of `"name": "express-boilerplate",`
+### /categories Endpoint
 
-## Scripts
+#### / Route
 
-Start the application `npm start`
+GET - Get all categories
 
-Start nodemon for the application `npm run dev`
+POST - Post new category (Auth Token Required)
 
-Run the tests `npm test`
+#### /:category_id Route
 
-## Deploying
+GET - Get single category by ID
 
-When your new project is ready for deployment, add a new Heroku application with `heroku create`. This will make a new git remote called "heroku" and you can then `npm run deploy` which will push to this remote's master branch.
+DELETE - Delete individual category (Auth Token Required) - Not yet available to client, reserved for admin
+
+PATCH - Edit category (Auth Token Required) - Not yet available to client, reserved for admin
+
+### /resources Endpoint
+
+#### / Route
+
+GET - Get all resources
+
+POST - Post new resource (Auth Token Required)
+
+#### /:resource_id Route
+
+GET - Get single resource by ID (Auth Token Required)
+
+DELETE - Delete individual resource (Auth Token Required) - Not yet available to client, reserved for admin
+
+PATCH - Edit resource (Auth Token Required) - Not yet available to client, reserved for admin
+
+#### /:resource_id/comments
+
+GET - Get comments for individual resource 
+
+### /comments Endpoint
+
+POST - Post comment for current resource (Auth Token Required) - resource_id required in request body
+
+### /auth Endpoint
+
+#### /signin Route
+
+POST - Validates user and logs them in
+
+### /users Endpoint
+
+GET - Get list of all users (used for development, not available from front end)
+
+POST - Adds newly registered user to database
+
+## Summary
+
+This application was created to aggregate educational resources available on the web by category.  It allows the user to optionally register an account and securely sign in.  Once authenticated the user can add categories and resources, as well as comment on and rate individual resources. If user should decline to sign in they can still browse the categories, resources and comments added by other users.
+
+## Technologies
+
+The technologies I've used here on the back end are NodeJS, Express, bcrypt, dotenv, helmet, jsonwebtoken, knex, morgan, treeize, xss and PostgreSQL.
+
+I also used mocha, chai, nodemon, postgrator-cli and supertest during development.
