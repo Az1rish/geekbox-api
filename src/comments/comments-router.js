@@ -7,32 +7,32 @@ const commentsRouter = express.Router();
 const jsonBodyParser = express.json();
 
 commentsRouter
-    .route('/')
-    .post(requireAuth, jsonBodyParser, (req, res, next) => {
-        const { comment, rating, resource_id } = req.body;
-        const newComment = { comment, rating, resource_id };
+  .route('/')
+  .post(requireAuth, jsonBodyParser, (req, res, next) => {
+    const { comment, rating, resource_id } = req.body;
+    const newComment = { comment, rating, resource_id };
 
-        for (const [key, value] of Object.entries(newComment)) {
-            if (value == null) {
-                return res.status(400).json({
-                    error: `Missing '${key}' in request body`
-                });
-            }
-        }
+    for (const [key, value] of Object.entries(newComment)) {
+      if (value == null) {
+        return res.status(400).json({
+          error: `Missing '${key}' in request body`,
+        });
+      }
+    }
 
-        newComment.user_id = req.user.id;
+    newComment.user_id = req.user.id;
 
-        CommentsService.insertComment(
-            req.app.get('db'),
-            newComment
-        )
-            .then((comment) => {
-                res
-                    .status(201)
-                    .location(path.posix.join(req.originalUrl, `/${comment.id}`))
-                    .json(CommentsService.serializeComment(comment));
-            })
-            .catch(next);
-    });
+    CommentsService.insertComment(
+      req.app.get('db'),
+      newComment,
+    )
+      .then((commentToInsert) => {
+        res
+          .status(201)
+          .location(path.posix.join(req.originalUrl, `/${commentToInsert.id}`))
+          .json(CommentsService.serializeComment(commentToInsert));
+      })
+      .catch(next);
+  });
 
 module.exports = commentsRouter;

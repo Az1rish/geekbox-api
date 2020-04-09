@@ -14,7 +14,12 @@ module.exports = {
         "linebreak-style": "off",
         "no-unused-expressions": "off",
         "implicit-arrow-linebreak": "off",
-        "max-len": "off"
+        "max-len": "off",
+        "no-console": "off",
+        "no-unused-vars": "off",
+        "camelcase": "off",
+        "no-restricted-syntax": "off",
+        "consistent-return": "off",
     },
     "overrides": [
         {
